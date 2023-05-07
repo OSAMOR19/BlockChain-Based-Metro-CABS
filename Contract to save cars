@@ -1,0 +1,24 @@
+pragma solidity ^0.8.4;
+
+contract CarRegistry {
+    struct Car {
+        string make;
+        string model;
+        uint256 year;
+        address owner;
+    }
+
+    mapping (uint256 => Car) private cars;
+    uint256 private nextCarId = 0;
+
+    function addCar(string memory _make, string memory _model, uint256 _year) public {
+        cars[nextCarId] = Car(_make, _model, _year, msg.sender);
+        nextCarId++;
+    }
+
+    function getCar(uint256 _id) public view returns (string memory, string memory, uint256, address) {
+        require(_id < nextCarId, "Invalid car ID");
+        Car memory car = cars[_id];
+        return (car.make, car.model, car.year, car.owner);
+    }
+}
