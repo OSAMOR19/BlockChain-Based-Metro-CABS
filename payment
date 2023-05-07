@@ -1,0 +1,32 @@
+// Specify the version of Solidity to use
+pragma solidity ^0.8.4;
+
+// Define the contract
+contract UberPayment {
+    
+    // Define the variables
+    address payable public uberDriver;
+    address payable public passenger;
+    uint256 public fareAmount;
+    bool public farePaid;
+    
+    // Define the constructor function
+    constructor(address payable _driver, uint256 _fareAmount) {
+        uberDriver = _driver;
+        fareAmount = _fareAmount;
+        farePaid = false;
+    }
+    
+    // Define the function to pay the fare
+    function payFare() public payable {
+        require(msg.sender == passenger, "Only the passenger can pay the fare.");
+        require(msg.value == fareAmount, "The fare amount is incorrect.");
+        require(!farePaid, "The fare has already been paid.");
+        
+        // Transfer the fare amount to the driver's address
+        uberDriver.transfer(msg.value);
+        
+        // Set the farePaid flag to true
+        farePaid = true;
+    }
+}
